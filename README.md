@@ -17,6 +17,8 @@ Within the application, you can :
 
 3. Done ! Now click `Sets` to list all your sets and start studying with them !
 
+- You can edit a *Set* description and tags by "creating a new set" with the same name !
+
 #### TODO
 
 Future features to be added :
