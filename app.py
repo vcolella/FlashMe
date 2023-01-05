@@ -166,11 +166,9 @@ def new_set():
 
     if request.method == "POST":
 
-        # # Ensure cash amount was submitted correctly
+        # # Ensure setName is here
         if not request.form.get("setName"):
             return apology("Set name must be filled", 400)
-
-        # Check if we need to update or insert
 
         rows = db.execute("SELECT * FROM sets WHERE username_id=? AND name=?", session["user_id"], request.form.get("setName"))
 
@@ -188,10 +186,6 @@ def new_set():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        # Get username weight
-        # TODO 
-        # show last register weight, if there's any
-
         return render_template("new_set.html")
 
 
@@ -201,8 +195,8 @@ def new_card():
     """Add new card"""
 
     if request.method == "POST":
-
-        # Saves diet name, recipe and json from EDAMAN to databse
+        
+        # Saves new card
 
         if not request.form.get("setName") or not request.form.get("cardQuestion") or not request.form.get("cardAnswer"):
             return apology("All fields must be filled", 400)
@@ -220,8 +214,6 @@ def new_card():
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-    # Get username weight
-    # TODO
         names = db.execute("SELECT name FROM sets")
         return render_template("new_card.html", names=names)
 
@@ -252,9 +244,6 @@ def list_sets():
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-    # Get username weight
-    # TODO 
-
         sets = db.execute("SELECT * FROM sets WHERE username_id=?", session["user_id"])
 
         if len(sets) > 0:
