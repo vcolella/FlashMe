@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+
+{% block title %}
+List Sets
+{% endblock %}
+
+{% block head %}
+{{super()}}
+<script src="https://code.jquery.com/jquery-3.6.2.min.js"
+  integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block main %}
+<div class="justify-content-center">
+
+  <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto">
+
+    {% for set in sets %}
+
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <!-- <img src="..." class="card-img-top" alt="..."> -->
+        <div class="card-body">
+          <h5 class="card-title" id="setName">{{set["name"]}}</h5>
+          <p class="card-text">{{set["description"]}}</p>
+          <p class="card-text">{{set["tags"]}}</p>
+
+          {% if set["total_cards"] > 0 %}
+
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            data-bs-setName='{{set["name"]}}' id='modalButton{{set["id"]}}'>
+            Start
+          </button>
+          <!-- <script>
+            $('#modalButton{{set["id"]}}').on('click', function () {
+              $(document).ready(function () {
+                $('#exampleModalLabel').text('{{ set["name"] | safe }}');
+                $.ajax({
+                  method: 'POST',
+                  url: '/list_sets',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(
+                    {
+                      setName: '{{ set["name"] | safe }}',
+                    }
+                  ),
+
+                  error: function (response) {
+                    console.log(response.responseJSON);
+                    // Not really used since we're using Jinja to filter zero cards sets
+                    $('#modalBody').text(response.responseJSON[0]["message"]);
+                  },
+
+                  success: function (responseText) {
+                    var i = 0;
+                    console.log(responseText);
+                    // Update question display
+                    $('#modalBody').text(responseText[i]['question']);
+                  }
+                });
+              })
+            });
+          </script> -->
+          {% endif %}
+
+          <!-- <a href="#" class="btn btn-primary">Start</a> -->
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalBody" data-bs-cards="" data-bs-cards-id=0>
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="exampleModalAnswerBtn">Answer</button>
+            <button type="button" class="btn btn-primary" id="exampleModalNextBtn">Next</button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+</div>
+
+<script>
+  var exampleModal = document.getElementById('exampleModal');
+  var exampleModalAnswer = document.getElementById('exampleModalAnswerBtn');
+  var exampleModalNext = document.getElementById('exampleModalNextBtn');
+
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    console.log('showing modal')
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var setName_ = button.getAttribute('data-bs-setName')
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modalBody = exampleModal.querySelector('.modal-body')
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    $.ajax({
+      method: 'POST',
+      url: '/list_sets',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(
+        {
+          setName: setName_,
+        }
+      ),
+
+      error: function (response) {
+        console.log(response.responseJSON);
+        // Not really used since we're using Jinja to filter zero cards sets
+        // $('#modalBody').text(response.responseJSON[0]["message"]);
+        modalBody.value = response.responseJSON[0]["message"];
+      },
+
+      success: function (responseText) {
+        console.log(responseText);
+        // Update question display
+        // $('#modalBody').text(responseText[i]['question']);
+        var cards = responseText;
+        question = cards[0]['question'];
+        modalTitle.textContent = setName_
+        modalBody.textContent = question
+
+        $('#modalBody').attr('data-bs-cards', JSON.stringify(cards))
+
+        cards = JSON.parse($('#modalBody').attr('data-bs-cards'));
+        current_id = $('#modalBody').attr('data-bs-cards-id');
+
+        if (current_id == Object.keys(cards).length - 1) {
+          exampleModalNext.textContent = 'Close';
+          $('#exampleModalNextBtn').attr('data-bs-dismiss', 'modal');
+        }
+      }
+    });
+
+
+
+  });
+
+  exampleModalAnswer.addEventListener('click', function (event) {
+    // check close condition
+    cards = JSON.parse($('#modalBody').attr('data-bs-cards'));
+    current_id = $('#modalBody').attr('data-bs-cards-id');
+
+    if (exampleModalAnswer.textContent == 'Answer') {
+      $('#modalBody').text(cards[current_id]['answer']);
+      exampleModalAnswer.textContent = 'Question';
+    }
+    else if (exampleModalAnswer.textContent == 'Question') {
+      $('#modalBody').text(cards[current_id]['question']);
+      exampleModalAnswer.textContent = 'Answer';
+    }
+
+  });
+
+  exampleModalNext.addEventListener('click', function (event) {
+
+    if (exampleModalNext.textContent != 'Close') {
+      cards = JSON.parse($('#modalBody').attr('data-bs-cards'));
+      current_id = parseInt($('#modalBody').attr('data-bs-cards-id')) + 1;
+
+      $('#modalBody').attr('data-bs-cards-id', current_id);
+
+      exampleModalAnswer.textContent = 'Answer';
+      $('#modalBody').text(cards[current_id]['question']);
+
+      if (current_id == Object.keys(cards).length - 1) {
+        exampleModalNext.textContent = 'Close';
+        $('#exampleModalNextBtn').attr('data-bs-dismiss', 'modal');
+      }
+    }
+    else {
+      // Reset
+      console.log('reset')
+      exampleModalNext.textContent = 'Next';
+      exampleModalAnswer.textContent = 'Answer';
+      $('#modalBody').attr('data-bs-cards-id', 0);
+      $('#modalBody').attr('data-bs-cards', "")
+      $('#exampleModalNextBtn').removeAttr('data-bs-dismiss');
+
+
+    }
+
+
+  })
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Diet
+{% endblock %}
+
+{% block head %}
+{{super()}}
+<script src="https://code.jquery.com/jquery-3.6.2.min.js"
+  integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block main %}
+<form action="/new_set" method="post">
+  <div class="row justify-content-center">
+    <!-- <div class="col-auto">
+          <div class="input-group">
+            <span class="input-group-text">Start Date</span>
+            <input name="date" class="form-control" type="date" />
+          </div>
+      </div> -->
+    <div class="col-auto">
+      <div class="input-group">
+        <span class="input-group-text">Set</span>
+        <textarea class="form-control" placeholder="Name" id="dietName" name="setName" rows="1"></textarea>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <textarea class="form-control" placeholder="Description" id="setDescription" name="setDescription"
+          rows="10"></textarea>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <textarea class="form-control" placeholder="Tags, separate with commas" id="setTags" name="setTags"
+          rows="10"></textarea>
+      </div>
+    </div>
+    <!-- <div class="col-auto">
+          <div class="input-group">
+              <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="calories" name="calories"
+                  placeholder="calories" type="number" step="1">
+              <span class="input-group-text"> cal </span>
+          </div>
+      </div> -->
+    <!-- Button trigger modal -->
+
+    <div class="col-auto">
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </div>
+  <input type="hidden" id="nutritionData" name="nutritionData" value="">
+</form>
+{% endblock %}

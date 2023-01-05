@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block main %}
+{% if data %}
+<div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script> -->
+    <canvas id="weight_display" width="400" height="100"></canvas>
+    <script type="module">
+        // import date-fns locale:
+        //import {pt} from 'date-fns/locale';
+        //import { Chart } from 'chart.js/auto'
+
+        //(async function () {
+        const data = {{ data| tojson | safe}}
+
+
+        //})(); 
+
+        new Chart(
+            document.getElementById('weight_display'),
+            {
+                type: 'line',
+                data: {
+                    labels: data.map(row => row.date),
+                    datasets: [
+                        {
+                            label: 'Weight (kg)',
+                            data: data.map(row => row.mass),
+                            borderColor: 'red',
+                            fill: false,
+                            cubicInterpolationMode: 'monotone',
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Diet',
+                            data: [50, 50, 50, 50],
+                            yAxisID: 'y1',
+                            categoryPercentage: 1.0,
+                            barPercentage: 1.0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: false,
+                            text: 'Chart.js Line Chart - Cubic interpolation mode'
+                        },
+                    },
+                    interaction: {
+                        intersect: false,
+                    },
+                    scales: {
+                        //adapters: {
+                        //    date: {
+                         //       locale: 'pt'
+                         //   }
+                        //},
+                        x: {
+                            //type: 'time',
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'kg'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'cal'
+                            },
+                            display: true,
+                            position: 'right',
+
+                            // grid line settings
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        },
+                       
+                        suggestedMin: 0
+                    }
+                }
+            }
+        );
+    </script>
+</div>
+{% endif %}
+{% endblock %}

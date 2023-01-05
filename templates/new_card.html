@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+New Card
+{% endblock %}
+
+{% block head %}
+{{super()}}
+<script src="https://code.jquery.com/jquery-3.6.2.min.js"
+  integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block main %}
+<form action="/new_card" method="post">
+  <div class="row justify-content-center">
+    <!-- <div class="col-auto">
+          <div class="input-group">
+            <span class="input-group-text">Start Date</span>
+            <input name="date" class="form-control" type="date" />
+          </div>
+      </div> -->
+    <div class="col-auto">
+      <div class="input-group">
+        <span class="input-group-text">Set</span>
+        <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." name="setName">
+        <datalist id="datalistOptions">
+          {% if names %}
+          {% for n in names %}
+          <option value="{{n['name']}}">
+          {% endfor %}
+          {% endif %}
+        </datalist>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <span class="input-group-text">Question</span>
+        <textarea class="form-control" placeholder="Type..." id="cardQuestion" name="cardQuestion" rows="1"></textarea>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <span class="input-group-text">Answer</span>
+        <textarea class="form-control" placeholder="Type..." id="cardAnswer" name="cardAnswer" rows="1"></textarea>
+      </div>
+    </div>
+    <!-- <div class="col-auto">
+          <div class="input-group">
+              <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="calories" name="calories"
+                  placeholder="calories" type="number" step="1">
+              <span class="input-group-text"> cal </span>
+          </div>
+      </div> -->
+    <!-- Button trigger modal -->
+
+    <div class="col-auto">
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </div>
+  <input type="hidden" id="nutritionData" name="nutritionData" value="">
+</form>
+{% endblock %}
