@@ -12,9 +12,6 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Custom filter
-# app.jinja_env.filters["usd"] = usd
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -22,11 +19,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///flashMe.db")
-
-
-# Make sure API key is set (if API is used)
-# if not os.environ.get("API_KEY"):
-#     raise RuntimeError("API_KEY not set")
 
 @app.after_request
 def after_request(response):
@@ -80,11 +72,6 @@ def index():
         return render_template("index.html")
 
     else:
-        # weights = db.execute("SELECT * FROM weights WHERE username_id=? ORDER BY date", session["user_id"])
-        
-        # if len(weights) > 0:
-        #     return render_template("index.html", data=weights)
-        # else:
         return redirect("/list_sets")
 
 @app.route("/logout")
@@ -183,15 +170,6 @@ def new_set():
         if not request.form.get("setName"):
             return apology("Set name must be filled", 400)
 
-
-        # today = datetime.date.today()
-        # input_date = datetime.datetime.strptime(request.form.get("date"), "%Y-%m-%d").date()
-
-        # if input_date > today:
-        #     return apology("can't add future dregister_weightates", 400)
-
-        # else:
-
         # Check if we need to update or insert
 
         rows = db.execute("SELECT * FROM sets WHERE username_id=? AND name=?", session["user_id"], request.form.get("setName"))
@@ -230,19 +208,6 @@ def new_card():
             return apology("All fields must be filled", 400)
         
         today = datetime.datetime.today()
-
-
-        # # Check if we need to update or insert
-        # rows = db.execute("SELECT * FROM diets WHERE username_id=? AND diet_name=?", session["user_id"], request.form.get("dietName"))
-
-        # # Update database for user's weight
-        # if len(rows) > 0:
-            
-        #     flash(f"You've successfully updated diet {request.form.get('dietName')} at {today.strftime('%d/%m/%Y')}.")
-        # else:
-        #     nutritionJson = json.loads(request.form.get("nutritionData"))
-
-        #     db.execute("INSERT INTO diets (username_id, diet_name, description, nutrition_json, creation_date) VALUES (?, ?, ?, ?, ?)", session["user_id"], request.form.get("dietName"), request.form.get("dietRecipe"), json.dumps(nutritionJson, ensure_ascii=False).encode('utf-8'), today.isoformat())
 
         setId = db.execute("SELECT id FROM sets WHERE name=?", request.form.get("setName"))[0]["id"]
 
