@@ -19,11 +19,10 @@ List Sets
 
     <div class="col">
       <div class="card" style="width: 18rem;">
-        <!-- <img src="..." class="card-img-top" alt="..."> -->
         <div class="card-body">
-          <h5 class="card-title" id="setName">{{set["name"]}}</h5>
-          <p class="card-text">{{set["description"]}}</p>
-          <p class="card-text">{{set["tags"]}}</p>
+          <h5 class="card-title fs-2 fw-bold" id="setName">{{set["name"]}}</h5>
+          <p class="card-text fst-italic fs-5 fw-normal">{{set["description"]}}</p>
+          <p class="card-text fs-6 fw-lighter">tags: {{set["tags"]}}</p>
 
           {% if set["total_cards"] > 0 %}
 
@@ -32,47 +31,12 @@ List Sets
             data-bs-setName='{{set["name"]}}' id='modalButton{{set["id"]}}'>
             Start
           </button>
-          <!-- <script>
-            $('#modalButton{{set["id"]}}').on('click', function () {
-              $(document).ready(function () {
-                $('#exampleModalLabel').text('{{ set["name"] | safe }}');
-                $.ajax({
-                  method: 'POST',
-                  url: '/list_sets',
-                  contentType: 'application/json; charset=utf-8',
-                  data: JSON.stringify(
-                    {
-                      setName: '{{ set["name"] | safe }}',
-                    }
-                  ),
-
-                  error: function (response) {
-                    console.log(response.responseJSON);
-                    // Not really used since we're using Jinja to filter zero cards sets
-                    $('#modalBody').text(response.responseJSON[0]["message"]);
-                  },
-
-                  success: function (responseText) {
-                    var i = 0;
-                    console.log(responseText);
-                    // Update question display
-                    $('#modalBody').text(responseText[i]['question']);
-                  }
-                });
-              })
-            });
-          </script> -->
           {% endif %}
-
-          <!-- <a href="#" class="btn btn-primary">Start</a> -->
         </div>
       </div>
     </div>
 
     {% endfor %}
-
-
-
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -128,16 +92,12 @@ List Sets
       ),
 
       error: function (response) {
-        console.log(response.responseJSON);
         // Not really used since we're using Jinja to filter zero cards sets
-        // $('#modalBody').text(response.responseJSON[0]["message"]);
         modalBody.value = response.responseJSON[0]["message"];
       },
 
       success: function (responseText) {
-        console.log(responseText);
         // Update question display
-        // $('#modalBody').text(responseText[i]['question']);
         var cards = responseText;
         question = cards[0]['question'];
         modalTitle.textContent = setName_
@@ -154,9 +114,6 @@ List Sets
         }
       }
     });
-
-
-
   });
 
   exampleModalAnswer.addEventListener('click', function (event) {
@@ -193,17 +150,12 @@ List Sets
     }
     else {
       // Reset
-      console.log('reset')
       exampleModalNext.textContent = 'Next';
       exampleModalAnswer.textContent = 'Answer';
       $('#modalBody').attr('data-bs-cards-id', 0);
       $('#modalBody').attr('data-bs-cards', "")
       $('#exampleModalNextBtn').removeAttr('data-bs-dismiss');
-
-
     }
-
-
   })
 </script>
 {% endblock %}

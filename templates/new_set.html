@@ -13,12 +13,6 @@ Add Diet
 {% block main %}
 <form action="/new_set" method="post">
   <div class="row justify-content-center">
-    <!-- <div class="col-auto">
-          <div class="input-group">
-            <span class="input-group-text">Start Date</span>
-            <input name="date" class="form-control" type="date" />
-          </div>
-      </div> -->
     <div class="col-auto">
       <div class="input-group">
         <span class="input-group-text">Set</span>
@@ -37,19 +31,9 @@ Add Diet
           rows="10"></textarea>
       </div>
     </div>
-    <!-- <div class="col-auto">
-          <div class="input-group">
-              <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="calories" name="calories"
-                  placeholder="calories" type="number" step="1">
-              <span class="input-group-text"> cal </span>
-          </div>
-      </div> -->
-    <!-- Button trigger modal -->
-
     <div class="col-auto">
       <button class="btn btn-primary" type="submit">Save</button>
     </div>
   </div>
-  <input type="hidden" id="nutritionData" name="nutritionData" value="">
 </form>
 {% endblock %}
